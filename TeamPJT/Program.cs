@@ -9,6 +9,7 @@
 
             private List<Item> storeInventory;
 
+            private List<Enemy> enemyInfo; 
 
             public GameManager()
             {
@@ -25,6 +26,11 @@
                 storeInventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
                 storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
                 storeInventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+            
+                enemyInfo = new List<Enemy>();
+                enemyInfo.Add(new Enemy(2, "미니언", 15, 5));
+                enemyInfo.Add(new Enemy(3, "공허충", 10, 8));
+                enemyInfo.Add(new Enemy(5, "대포미니언", 25, 8));
             }
 
             public void StartGame()
@@ -50,10 +56,11 @@
                 Console.WriteLine("1. 상태보기");
                 Console.WriteLine("2. 인벤토리");
                 Console.WriteLine("3. 상점");
+                Console.WriteLine("4. 전투 시작");
                 Console.WriteLine("");
 
                 // 2. 선택한 결과를 검증함
-                int choice = ConsoleUtility.PromptMenuChoice(1, 3);
+                int choice = ConsoleUtility.PromptMenuChoice(1, 4);
 
                 // 3. 선택한 결과에 따라 보내줌
                 switch (choice)
@@ -66,6 +73,9 @@
                         break;
                     case 3:
                         StoreMenu();
+                        break;
+                    case 4:
+                        BattleMenu();
                         break;
                 }
                 MainMenu();
@@ -250,6 +260,85 @@
                         }
                         break;
                 }
+            }
+            
+            public void BattleMenu()
+            {
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("Battle!!");
+                Console.WriteLine("");
+
+                //몬스터 정보 작성
+                for (int i=0; i < enemyInfo.Count; i++)
+                {
+                    enemyInfo[i].PrintEnemyInfomation();
+                }
+
+                Console.WriteLine("");
+                Console.WriteLine("[내정보]");
+                Console.WriteLine($"Lv.{player.Level} {player.Name} {player.Job}");
+                Console.WriteLine($"HP {player.Hp}/{player.Hp}");
+
+                Console.WriteLine("");
+                Console.WriteLine("1. 공격");
+                Console.WriteLine("0. 나가기");
+                Console.WriteLine("");
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 1))
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                    case 1:
+                        Battle();
+                        break;
+                }
+            }
+
+            public void PlayerTurn()
+            {
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("Battle!!");
+                Console.WriteLine("");
+
+                for (int i = 0; i < enemyInfo.Count; i++)
+                {
+                    enemyInfo[i].PrintEnemyInfomation(true, i + 1);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("0. 취소");
+
+                int keyInput = ConsoleUtility.PromptMenuChoice(0, enemyInfo.Count);
+
+                switch (keyInput)
+                {
+                    case 0:
+                        // 1. 0을 입력했을 경우
+
+                        break;
+                    default:
+                        // 2. 몬스터의 피가 0이라면
+                        // HP 0 으로 표시
+                        // 텍스트 색상 바꾸기
+                        
+                        // 3. 몬스터를 공격하면 공격력만큼 hp 깎기
+                        
+                        // 4. 선택지 외의 숫자를 입력했을때
+                        
+                        break;
+                }
+            }
+
+            public void EnemyTurn()
+            {
+                Console.Clear();
+            }
+
+            public void BattleResult()
+            {
+                Console.Clear();
             }
         }
 
