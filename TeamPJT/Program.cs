@@ -8,7 +8,7 @@
             private List<Item> inventory;
 
             private List<Item> storeInventory;
-
+            private List<Monsters> monster;
 
             public GameManager()
             {
@@ -25,6 +25,15 @@
                 storeInventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
                 storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
                 storeInventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+
+                monster = new List<Monsters>();
+                monster.Add(new Monsters("고블린", 1, new Random().Next(4,6) , 2, 20));
+                monster.Add(new Monsters("고블린 전사", 2, new Random().Next(8, 12), 4, 30));
+                monster.Add(new Monsters("고블린 족장", 4, new Random().Next(15, 20), 8, 50));
+                monster.Add(new Monsters("놀 전사", 2, new Random().Next(10, 15), 6, 40));
+                monster.Add(new Monsters("놀 주술사", 4, new Random().Next(30, 40), 4, 30));
+                monster.Add(new Monsters("놀 대장", 7, new Random().Next(20, 30), 10, 60));
+                monster.Add(new Monsters("드래곤", 30, new Random().Next(80, 100), 40, 200));
             }
 
             public void StartGame()
@@ -50,10 +59,11 @@
                 Console.WriteLine("1. 상태보기");
                 Console.WriteLine("2. 인벤토리");
                 Console.WriteLine("3. 상점");
+                Console.WriteLine("4. 던전");
                 Console.WriteLine("");
 
                 // 2. 선택한 결과를 검증함
-                int choice = ConsoleUtility.PromptMenuChoice(1, 3);
+                int choice = ConsoleUtility.PromptMenuChoice(1, 4);
 
                 // 3. 선택한 결과에 따라 보내줌
                 switch (choice)
@@ -66,6 +76,9 @@
                         break;
                     case 3:
                         StoreMenu();
+                        break;
+                    case 4:
+                        DungeonEntrance();
                         break;
                 }
                 MainMenu();
@@ -250,7 +263,79 @@
                         }
                         break;
                 }
+
             }
+
+
+            private void DungeonEntrance()
+            {
+                Console.Clear();
+                ConsoleUtility.ShowTitle("■ 던전 입구 ■");
+                Console.WriteLine("던전을 탐색하고 전리품을 획득해 더욱 강해지세요!");
+                Console.WriteLine("");
+                Console.WriteLine("1. 던전 입장");
+                Console.WriteLine("0. 나가기");
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 1))
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                    case 1:
+                        Stage();
+                        break;
+                }
+                Console.ReadKey();
+
+            }
+
+            private void Stage()
+            {
+
+                Console.Clear();
+                // 리스트몬스터의 1~3번 고블린을 랜덤으로 1~4마리 뽑기
+                // 1스테이지에서 등장할 1~3번 고블린을 몬스터풀 리스트에 추가
+                List<Monsters> stage1monspool = new List<Monsters>();
+                stage1monspool.Add(monster[0]);
+                stage1monspool.Add(monster[1]);
+                stage1monspool.Add(monster[2]);
+
+                // 실제 등장할 몬스터 리스트
+                List<Monsters> selectedmonster = new List<Monsters>();
+
+                // 랜덤으로 1~4마리 선택
+                Random random = new Random();
+                int monstercount = random.Next(1, 5);
+                for (int i = 0; i < monstercount; i++)
+                {
+                    // 몬스터 풀에서 랜덤하게 선택하여 실제 등장할 몬스터 리스트에 추가
+                    int monsteridx = random.Next(stage1monspool.Count);
+                    selectedmonster.Add(stage1monspool[monsteridx]);
+                }
+
+                Console.WriteLine("몬스터 조우!!");
+                Console.WriteLine("");
+                Console.WriteLine("등장 몬스터 : ");
+                for (int i = 0; i < selectedmonster.Count; i++)
+                {
+                    selectedmonster[i].PrintMonsterDescription(i + 1);
+                }
+                Console.WriteLine("1. 공격 ");
+                Console.WriteLine("2. 도망간다");
+
+                switch (ConsoleUtility.PromptMenuChoice(1, 2))
+                {
+                    case 1:
+                        
+                    case 2:
+                        Console.WriteLine("당신은 마을로 도망쳤다.");
+                        Thread.Sleep(1000);
+                        MainMenu();
+                        break;
+                }
+
+            }
+
         }
 
         public class Program1
