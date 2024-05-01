@@ -41,9 +41,10 @@ namespace TeamPJT
 
             Console.WriteLine($"Lv. {Level} {Name} HP {Hp}");
 
-            if (IsAtk)
+            if(Hp <= 0)
             {
-
+                IsDead = true;
+                //죽으면 공격 X
             }
         }
     }

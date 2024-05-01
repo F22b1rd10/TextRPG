@@ -317,7 +317,7 @@ namespace TeamPJT
                 switch (keyInput)
                 {
                     case 0:
-                        EnemyTurn();
+                        BattleMenu();
                         break;
                     default:
                         // 1. 몬스터의 피가 0이라면
@@ -327,6 +327,9 @@ namespace TeamPJT
                         // 3. 선택지 외의 숫자를 입력했을때
                         if (keyInput <= enemyInfo.Count)
                         {
+                            Console.Clear();
+                            ConsoleUtility.ShowTitle("Battle!!");
+                            Console.WriteLine("");
                             AttackEnemy(enemyInfo[keyInput - 1]);
                         }
                         else
@@ -354,19 +357,48 @@ namespace TeamPJT
                     Console.WriteLine($"Lv.{enemy.Level} {enemy.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
                 }
                 Console.WriteLine("");
-                Console.ReadKey();
-                EnemyTurn();
+                Console.WriteLine("0. 다음");
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 1))
+                {
+                    case 0:
+                        EnemyTurn(enemy);
+                        break;
+                }
             }
 
-            public void EnemyTurn()
+            public void EnemyTurn(MHG_Enemy enemy)
             {
                 Console.Clear();
+                ConsoleUtility.ShowTitle("Battle!!");
+                Console.WriteLine("");
 
+                for(int i = 0; i < enemyInfo.Count; i++)
+                {
+                    int damage = (int)(enemy.Atk * (0.9 + new Random().NextDouble() * 0.2));
+                    player.Hp -= damage;
+                    Console.WriteLine($"Lv. {enemy.Level} {enemy.Name} 의 공격!");
+                    Console.WriteLine($"{player.Name} 을(를) 맞췄습니다. [데미지 : {damage}");
+                    Console.WriteLine("");
+
+                    Console.WriteLine($"Lv. {player.Level} {player.Name}");
+                    Console.WriteLine($"HP {player.Hp} -> {player.Hp}");
+                    Console.WriteLine("");
+                }
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 1))
+                {
+                    case 0:
+                        PlayerTurn();
+                        break;
+                }
             }
 
             public void BattleResult()
             {
                 Console.Clear();
+                //bool isWin 생성 
+                //true면 Victory false면 Lose
             }
         }
 
