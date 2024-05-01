@@ -1,12 +1,12 @@
 ﻿namespace TeamPJT
 {
-    internal class Program
+    internal partial class Program
     {
         public class GameManager
         {
             private Player player;
+            private List<Monster> monsters;
             private List<Item> inventory;
-
             private List<Item> storeInventory;
 
 
@@ -17,7 +17,11 @@
 
             private void InitializeGame()
             {
-                player = new Player("Jiwon", "Programmer", 1, 10, 5, 100, 15000);
+                player = new Player("Woohyeok", "Noob", 1, 10, 5, 100, 15000);
+                monsters = new List<Monster>();
+                monsters.Add(new Monster(2, "미니언", 5, 15));
+                monsters.Add(new Monster(3, "공허충", 8, 10));
+                monsters.Add(new Monster(5, "대포미니언", 15, 25));
 
                 inventory = new List<Item>();
 
@@ -50,10 +54,11 @@
                 Console.WriteLine("1. 상태보기");
                 Console.WriteLine("2. 인벤토리");
                 Console.WriteLine("3. 상점");
+                Console.WriteLine("4. 전투");
                 Console.WriteLine("");
 
                 // 2. 선택한 결과를 검증함
-                int choice = ConsoleUtility.PromptMenuChoice(1, 3);
+                int choice = ConsoleUtility.PromptMenuChoice(1, 4);
 
                 // 3. 선택한 결과에 따라 보내줌
                 switch (choice)
@@ -66,6 +71,9 @@
                         break;
                     case 3:
                         StoreMenu();
+                        break;
+                    case 4:
+                        BattleMainMenu();
                         break;
                 }
                 MainMenu();
@@ -251,14 +259,104 @@
                         break;
                 }
             }
-        }
 
-        public class Program1
-        {
-            public static void Main(string[] args)
+            private void BattleMainMenu()
             {
-                GameManager gameManager = new GameManager();
-                gameManager.StartGame();
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("■ 전투 ■");
+                Console.WriteLine("");
+                for (int i = 0; i < monsters.Count; i++)
+                {
+                    monsters[i].PrintMonsters(false);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("1. 공격");
+                Console.WriteLine("");
+
+                switch (ConsoleUtility.PromptMenuChoice(1, 1))
+                {
+                    case 1:
+                        BattleAttackMenu();
+                        break;
+                }
+            }
+
+            private void BattleAttackMenu(string? prompt = null)
+            {
+                if (prompt != null)
+                {
+                    // 1초간 메시지를 띄운 다음에 다시 진행
+                    Console.Clear();
+                    ConsoleUtility.ShowTitle(prompt);
+                    Thread.Sleep(1000);
+                }
+
+                Console.Clear();
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("■ 전투 ■");
+
+                Console.WriteLine("");
+                Console.WriteLine("0. 취소");
+                Console.WriteLine("");
+
+                int keyInput = ConsoleUtility.PromptMenuChoice(0, monsters.Count);
+
+                switch (keyInput)
+                {
+                    case 0:
+                        BattleMainMenu();
+                        break;
+                    default:
+                        // 1 : 죽은 대상을 선택했을 경우
+                        if (monsters[keyInput - 1].IsDied == true)
+                        {
+                            BattleAttackMenu("대상은 이미 죽었습니다.");
+                        }
+                        // 2 : 올바르게 입력했을 경우
+                        else if (monsters[keyInput - 1].IsDied == false)
+                        {
+                            int playerMinAtk = player.Atk - (int)(player.Atk * 0.1);
+                            int playerMaxAtk = player.Atk + (int)(player.Atk * 0.1);
+                            int playerAvgAtk;
+
+                            Random Atk = new Random();
+                            playerAvgAtk = Atk.Next(playerMinAtk, playerMaxAtk);
+
+                            monsters[keyInput - 1].Hp -= playerAvgAtk;
+                            BattleAttackResult();
+                        }
+                        // 3 : 범위 밖 입력을 했을 경우
+                        else
+                        {
+                            BattleAttackMenu("잘못된 입력입니다.");
+                        }
+                        break;
+                }
+            }
+
+            private void BattleAttackResult()
+            {
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("■ 전투 ■");
+            }
+
+            private void BattleEnemyPhase()
+            {
+                Console.Clear();
+
+                ConsoleUtility.ShowTitle("■ 전투 ■");
+            }
+
+            public class Program1
+            {
+                public static void Main(string[] args)
+                {
+                    GameManager gameManager = new GameManager();
+                    gameManager.StartGame();
+                }
             }
         }
     }

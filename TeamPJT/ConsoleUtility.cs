@@ -45,7 +45,7 @@ namespace TeamPJT
 
         internal static void ShowTitle(string title)
         {
-            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(title);
             Console.ResetColor();
         }
