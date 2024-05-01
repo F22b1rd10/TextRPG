@@ -259,7 +259,7 @@
                         break;
                 }
             }
-
+            
             private void BattleMainMenu()
             {
                 Console.Clear();
@@ -293,10 +293,13 @@
                 }
 
                 Console.Clear();
-                Console.Clear();
 
                 ConsoleUtility.ShowTitle("■ 전투 ■");
-
+                Console.WriteLine("");
+                for (int i = 0; i < monsters.Count; i++)
+                {
+                    monsters[i].PrintMonsters(true, i + 1);
+                }
                 Console.WriteLine("");
                 Console.WriteLine("0. 취소");
                 Console.WriteLine("");
@@ -309,14 +312,15 @@
                         BattleMainMenu();
                         break;
                     default:
-                        // 1 : 죽은 대상을 선택했을 경우
+                        // 1 : 죽은 대상 선택
                         if (monsters[keyInput - 1].IsDied == true)
                         {
                             BattleAttackMenu("대상은 이미 죽었습니다.");
                         }
-                        // 2 : 올바르게 입력했을 경우
-                        else if (monsters[keyInput - 1].IsDied == false)
+                        // 2 : 올바른 입력
+                        else 
                         {
+                            // 플레이어 공격 오차값 계산
                             int playerMinAtk = player.Atk - (int)(player.Atk * 0.1);
                             int playerMaxAtk = player.Atk + (int)(player.Atk * 0.1);
                             int playerAvgAtk;
@@ -327,11 +331,6 @@
                             monsters[keyInput - 1].Hp -= playerAvgAtk;
                             BattleAttackResult();
                         }
-                        // 3 : 범위 밖 입력을 했을 경우
-                        else
-                        {
-                            BattleAttackMenu("잘못된 입력입니다.");
-                        }
                         break;
                 }
             }
@@ -341,6 +340,21 @@
                 Console.Clear();
 
                 ConsoleUtility.ShowTitle("■ 전투 ■");
+                Console.WriteLine("");
+                for (int i = 0; i < monsters.Count; i++)
+                {
+                    monsters[i].PrintMonsters(false);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("1. 턴 종료");
+                Console.WriteLine("");
+
+                switch (ConsoleUtility.PromptMenuChoice(1, 1))
+                {
+                    case 1:
+                        BattleEnemyPhase();
+                        break;
+                }
             }
 
             private void BattleEnemyPhase()

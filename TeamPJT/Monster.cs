@@ -26,26 +26,27 @@ namespace TeamPJT
 
         internal void PrintMonsters(bool withNumber = false, int idx = 0)
         {
+            CheckDied();
             Console.Write("- ");
-            if (withNumber)
+            if (withNumber) // 공격 시 몬스터별 숫자 표기
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write($"{idx} ");
                 Console.ResetColor();
             }
-            if (IsDied)
+            if (IsDied)  // 사망 시 해당 몬스터 관련 텍스트 색상 변경
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
                 Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
-                Console.Write(ConsoleUtility.PadRightForMixedText("Died", 5));
+                Console.Write(ConsoleUtility.PadRightForMixedText("   Died", 5));
                 Console.ResetColor();
                 Console.WriteLine("");
             }
             else
             {
                 Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
                 Console.ResetColor();
                 Console.Write(ConsoleUtility.PadRightForMixedText($"  HP {Hp}", 5));
@@ -87,13 +88,13 @@ namespace TeamPJT
         //        ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
         //    }
         //}
-
-        internal void Died()
+        internal void CheckDied() // 사망 시 공격 불가 판정을 위한 메서드
         {
             if (Hp <= 0)
             {
                 IsDied = true;
-            }            
+            }
         }
+
     }
 }
