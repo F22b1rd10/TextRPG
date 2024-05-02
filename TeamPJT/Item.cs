@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TeamPJT
 {
@@ -46,6 +48,7 @@ namespace TeamPJT
         // 2. 장착관리에서 내가 어떤 아이템을 낄지 말지 결정할 때
         internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
         {
+
             Console.Write("- ");
             if (withNumber)
             {
@@ -66,9 +69,20 @@ namespace TeamPJT
 
             Console.Write(" | ");
 
-            if (Atk != 0) Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
-            if (Def != 0) Console.Write($"방어력 {(Atk >= 0 ? "+" : "")}{Def} ");
-            if (Hp != 0) Console.Write($"체  력 {(Atk >= 0 ? "+" : "")}{Hp} ");
+            if (Atk != 0)
+            {
+                Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
+                //Player.Atk += Atk
+            }
+            if (Def != 0)
+            {
+                Console.Write($"방어력 {(Atk >= 0 ? "+" : "")}{Def} ");
+            }
+
+            if (Hp != 0)
+            {
+                Console.Write($"체  력 {(Atk >= 0 ? "+" : "")}{Hp} ");
+            }
 
             Console.Write(" | ");
 
@@ -79,6 +93,7 @@ namespace TeamPJT
 
         public void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
         {
+            
             Console.Write("- ");
             // 장착관리 전용
             if (withNumber)
@@ -114,6 +129,7 @@ namespace TeamPJT
         internal void ToggleEquipStatus()
         {
             IsEquipped = !IsEquipped;
+            
         }
 
         internal void Purchase()

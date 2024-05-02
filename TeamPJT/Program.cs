@@ -22,9 +22,11 @@
                 inventory = new List<Item>();
 
                 storeInventory = new List<Item>();
+                storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 700));
+                storeInventory.Add(new Item("철검", "철로 만든 검", ItemType.WEAPON, 10, 0, 0, 2000));
                 storeInventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
-                storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
                 storeInventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+
 
                 monster = new List<Monsters>();
                 monster.Add(new Monsters("고블린", 1, new Random().Next(4,6) , 2, 20));
@@ -43,11 +45,12 @@
                 MainMenu();
             }
 
-            private void MainMenu()
+            public void MainMenu()
             {
                 // 구성
                 // 0. 화면 정리
                 Console.Clear();
+                player.Hp = 100;
 
                 // 1. 선택 멘트를 줌
                 Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -286,7 +289,6 @@
                         break;
                 }
                 Console.ReadKey();
-
             }
 
             private void Stage()
@@ -296,9 +298,9 @@
                 // 리스트몬스터의 1~3번 고블린을 랜덤으로 1~4마리 뽑기
                 // 1스테이지에서 등장할 1~3번 고블린을 몬스터풀 리스트에 추가
                 List<Monsters> stage1monspool = new List<Monsters>();
-                stage1monspool.Add(monster[0]);
-                stage1monspool.Add(monster[1]);
-                stage1monspool.Add(monster[2]);
+                stage1monspool.Add(monster[0].BattleMonsters());
+                stage1monspool.Add(monster[1].BattleMonsters());
+                stage1monspool.Add(monster[2].BattleMonsters());
 
                 // 실제 등장할 몬스터 리스트
                 List<Monsters> selectedmonster = new List<Monsters>();
@@ -306,32 +308,118 @@
                 // 랜덤으로 1~4마리 선택
                 Random random = new Random();
                 int monstercount = random.Next(1, 5);
+                
+                // 몬스터 풀에서 랜덤하게 선택하여 실제 등장할 몬스터 리스트에 추가
                 for (int i = 0; i < monstercount; i++)
                 {
-                    // 몬스터 풀에서 랜덤하게 선택하여 실제 등장할 몬스터 리스트에 추가
-                    int monsteridx = random.Next(stage1monspool.Count);
-                    selectedmonster.Add(stage1monspool[monsteridx]);
+                    int monsteridx = random.Next(0, monstercount);
+                    selectedmonster.Add(stage1monspool[monsteridx].BattleMonsters());
+                }
+                PlayerTurn();
+
+                void PlayerTurn()
+                {
+                    Console.Clear();
+                    Console.WriteLine("몬스터 조우!!");
+                    Console.WriteLine($"현재 체력 : {player.Hp}");
+                    Console.WriteLine("");
+                    Console.WriteLine("등장 몬스터 : ");
+                    for (int i = 0; i < selectedmonster.Count; i++)
+                    {
+                        selectedmonster[i].PrintMonsterDescription(i+1);
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("1. 공격 ");
+                    Console.WriteLine("0. 도망간다");
+                    Random Getawayrandom = new Random();
+                    int GetawayPercent = Getawayrandom.Next(1,13-(2*monstercount));
+                    
+
+                    int keyInput = ConsoleUtility.PromptMenuChoice(0, monstercount);
+                    switch (keyInput)
+                    {
+                        case 0:
+                            // 도망은 등장한 몬스터 수에 따라 최대 50%에서 최소 20% 확률로 실패함
+                            if (GetawayPercent < 3)
+                            {
+                                Console.WriteLine("도망에 실패했다!");
+                                MonstersTurn();
+                            }
+                            else
+                            {
+                                Console.WriteLine("당신은 마을로 도망쳤다.");
+                                Thread.Sleep(1000);
+                                MainMenu();
+                            }
+                            break;
+
+                        case 1:
+                            Console.WriteLine("누구를 공격하시겠습니까?");
+                            PlayerAttack();
+                        break;
+                    }
                 }
 
-                Console.WriteLine("몬스터 조우!!");
-                Console.WriteLine("");
-                Console.WriteLine("등장 몬스터 : ");
-                for (int i = 0; i < selectedmonster.Count; i++)
+                void PlayerAttack()
                 {
-                    selectedmonster[i].PrintMonsterDescription(i + 1);
+                    int chosenmonster = ConsoleUtility.AttackedMonsterChoice(1, monstercount);
+                    if (selectedmonster[chosenmonster-1].Isdead)
+                    {
+                        Console.WriteLine("이미 죽은 몬스터입니다.");
+                        PlayerAttack();
+                    }
+                    else
+                    {
+                        Console.Write("플레이어의 공격");
+                        selectedmonster[chosenmonster-1].TakeDamage(player.Atk);
+                        Thread.Sleep(1000);
+                        CheckVictory();
+                    }
                 }
-                Console.WriteLine("1. 공격 ");
-                Console.WriteLine("2. 도망간다");
 
-                switch (ConsoleUtility.PromptMenuChoice(1, 2))
+                void CheckVictory()
                 {
-                    case 1:
-                        
-                    case 2:
-                        Console.WriteLine("당신은 마을로 도망쳤다.");
+                    //todo
+                    // 현재 문제점 플레이어의 공격이 참조한 원래 몬스터를 공격하고 있음
+                    // 플레이어의 공격이 선택한 몬스터의 번호를 공격하는게 아니고 몬스터 풀의 몬스터 인덱스 자체를 공격하고있따
+                    // 게임오버는 잘됨
+
+                    int aliveMonsterCount = 0;
+                    foreach (var monster in selectedmonster)
+                    {
+                        if (monster.Isdead)
+                        {
+                            aliveMonsterCount++;
+                        }
+                    }
+
+                    if (aliveMonsterCount == monstercount)
+                    {
+                        Console.WriteLine("승리했습니다!");
+                        Console.WriteLine("마을로 돌아갑니다.");
                         Thread.Sleep(1000);
                         MainMenu();
-                        break;
+                    }
+                    else
+                    {
+                        MonstersTurn();
+                    }
+                }
+
+                void MonstersTurn()
+                {
+                    Console.Write("몬스터의 턴");
+                    Thread.Sleep(1000);
+                    for(int i =0; i < monstercount; i++)
+                    {
+                        player.TakeDamage(monster[i+1].Atk);
+                    }
+                    Thread.Sleep(3000);
+                    PlayerTurn();
+                    
+                    //몬스터의 턴, 살아있는 몬스터가 공격해 플레이어가 피해를 받음(자동)
+                    //플레이어턴으로 이동
+                    //플레이어 사망시 자동 게임오버 처리했음(일단은)
                 }
 
             }
