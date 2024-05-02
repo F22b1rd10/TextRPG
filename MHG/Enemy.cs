@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace TeamPJT
 {
-    internal class MHG_Enemy
+    internal class Enemy
     {
         public int Level { get; }
         public string Name { get; }
@@ -20,7 +20,7 @@ namespace TeamPJT
         public bool IsAtk { get; private set; }
         public bool IsDead { get; private set; }
 
-        public MHG_Enemy(int level, string name, int hp, int atk, bool isAtk = false, bool isDead = false)
+        public Enemy(int level, string name, int hp, int atk, bool isAtk = false, bool isDead = false)
         {
             Level = level;
             Name = name;
@@ -45,6 +45,7 @@ namespace TeamPJT
             {
                 IsDead = true;
                 //죽으면 공격 X
+                IsAtk = false;
             }
         }
     }

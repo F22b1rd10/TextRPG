@@ -2,7 +2,7 @@
 
 namespace TeamPJT
 {
-    internal class MHG_Program
+    internal class Program
     {
         public class GameManager
         {
@@ -11,7 +11,7 @@ namespace TeamPJT
 
             private List<Item> storeInventory;
 
-            private List<MHG_Enemy> enemyInfo;
+            private List<Enemy> enemyInfo;
 
             public GameManager()
             {
@@ -29,10 +29,10 @@ namespace TeamPJT
                 storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
                 storeInventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
 
-                enemyInfo = new List<MHG_Enemy>();
-                enemyInfo.Add(new MHG_Enemy(2, "미니언", 15, 5));
-                enemyInfo.Add(new MHG_Enemy(3, "공허충", 10, 8));
-                enemyInfo.Add(new MHG_Enemy(5, "대포미니언", 25, 8));
+                enemyInfo = new List<Enemy>();
+                enemyInfo.Add(new Enemy(2, "미니언", 15, 5));
+                enemyInfo.Add(new Enemy(3, "공허충", 10, 8));
+                enemyInfo.Add(new Enemy(5, "대포미니언", 25, 8));
             }
 
             public void StartGame()
@@ -320,11 +320,6 @@ namespace TeamPJT
                         BattleMenu();
                         break;
                     default:
-                        // 1. 몬스터의 피가 0이라면
-                        // HP 0 으로 표시
-                        // 텍스트 색상 바꾸기
-                        // 2. 몬스터를 공격하면 공격력만큼 hp 깎기
-                        // 3. 선택지 외의 숫자를 입력했을때
                         if (keyInput <= enemyInfo.Count)
                         {
                             Console.Clear();
@@ -340,7 +335,7 @@ namespace TeamPJT
                 }
             }
 
-            public void AttackEnemy(MHG_Enemy enemy)
+            public void AttackEnemy(Enemy enemy)
             {
                 //Player의 공격력의 90% ~ 110% 사이의 랜덤한 값
                 int damage = (int)(player.Atk * (0.9 + new Random().NextDouble() * 0.2));
@@ -367,26 +362,33 @@ namespace TeamPJT
                 }
             }
 
-            public void EnemyTurn(MHG_Enemy enemy)
+            public void EnemyTurn(Enemy enemy)
             {
                 Console.Clear();
-                ConsoleUtility.ShowTitle("Battle!!");
-                Console.WriteLine("");
 
                 for(int i = 0; i < enemyInfo.Count; i++)
                 {
-                    int damage = (int)(enemy.Atk * (0.9 + new Random().NextDouble() * 0.2));
-                    player.Hp -= damage;
-                    Console.WriteLine($"Lv. {enemy.Level} {enemy.Name} 의 공격!");
-                    Console.WriteLine($"{player.Name} 을(를) 맞췄습니다. [데미지 : {damage}");
+                    ConsoleUtility.ShowTitle("Battle!!");
                     Console.WriteLine("");
 
-                    Console.WriteLine($"Lv. {player.Level} {player.Name}");
-                    Console.WriteLine($"HP {player.Hp} -> {player.Hp}");
-                    Console.WriteLine("");
+                    if (!enemy.IsDead)
+                    {
+                        int damage = (int)(enemy.Atk * (0.9 + new Random().NextDouble() * 0.2));
+                        player.Hp -= damage;
+
+                        Console.WriteLine($"Lv. {enemy.Level} {enemy.Name} 의 공격!");
+                        Console.WriteLine($"{player.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+                        Console.WriteLine("");
+
+                        Console.WriteLine($"Lv. {player.Level} {player.Name}");
+                        Console.WriteLine($"HP {player.Hp} -> {player.Hp}");
+                        Console.WriteLine("");
+
+                    }
+                    Console.WriteLine("0. 다음");
                 }
 
-                switch (ConsoleUtility.PromptMenuChoice(0, 1))
+                switch (ConsoleUtility.PromptMenuChoice(0, 0))
                 {
                     case 0:
                         PlayerTurn();
@@ -394,12 +396,53 @@ namespace TeamPJT
                 }
             }
 
-            public void BattleResult()
+
+            public void Victory()
             {
                 Console.Clear();
-                //bool isWin 생성 
-                //true면 Victory false면 Lose
+                ConsoleUtility.ShowTitle("Battle!! - Result");
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Victory");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.WriteLine($"던전에서 몬스터 {enemyInfo.Count}마리를 잡았습니다.");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                Console.WriteLine($"HP 100 -> {player.Hp}");
+                Console.WriteLine("");
+                Console.WriteLine("0. 다음");
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 0))
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                }
             }
+
+            public void Lose()
+            {
+                Console.Clear();
+                ConsoleUtility.ShowTitle("Battle!! - Result");
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("You Lose");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                Console.WriteLine("HP 100 -> 0");
+                Console.WriteLine("");
+                Console.WriteLine("0. 다음");
+
+                switch (ConsoleUtility.PromptMenuChoice(0, 0))
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                }
+            }
+
         }
 
         public class Program1
