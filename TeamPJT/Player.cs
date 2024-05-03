@@ -37,18 +37,17 @@ namespace TeamPJT
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
                 Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
-                Console.Write(ConsoleUtility.PadRightForMixedText("   Dead", 5));
+                Console.WriteLine(ConsoleUtility.PadRightForMixedText("   Dead", 5));
                 Console.ResetColor();
-                Console.WriteLine("");
             }
             else
             {
-                Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
+                Console.WriteLine("[ 내 정보 ]");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));                
+                Console.WriteLine(ConsoleUtility.PadRightForMixedText(" " + Name.ToString() + $"({Job})", 12));
                 Console.ResetColor();
-                Console.Write(ConsoleUtility.PadRightForMixedText($"  HP {Hp}", 5));
-                Console.WriteLine("");
+                Console.WriteLine(ConsoleUtility.PadRightForMixedText($"HP {Hp}/100", 5));                
             }
         }
 

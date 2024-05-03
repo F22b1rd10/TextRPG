@@ -39,8 +39,7 @@ namespace TeamPJT
                 Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
                 Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
                 Console.Write(ConsoleUtility.PadRightForMixedText("   Died", 5));
-                Console.ResetColor();
-                Console.WriteLine("");
+                Console.ResetColor();                
             }
             else
             {
@@ -48,8 +47,7 @@ namespace TeamPJT
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write(ConsoleUtility.PadRightForMixedText(" " + Name.ToString(), 12));
                 Console.ResetColor();
-                Console.Write(ConsoleUtility.PadRightForMixedText($"  HP {Hp}", 5));
-                Console.WriteLine("");
+                Console.Write(ConsoleUtility.PadRightForMixedText($"  HP {Hp}", 5));                
             }
         }
 

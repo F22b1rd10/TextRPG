@@ -231,7 +231,7 @@
                         break;
                     default:
                         // 1 : 이미 구매한 경우
-                        if (storeInventory[keyInput - 1].IsPurchased) // index 맞추기
+                        if (storeInventory[keyInput - 1].IsPurchased)
                         {
                             PurchaseMenu("이미 구매한 아이템입니다.");
                         }
@@ -261,13 +261,16 @@
 
                 ConsoleUtility.ShowTitle("■ 전투 ■");
                 Console.WriteLine("");
-                for (int i = 0; i < monsters.Count; i++)
+                Random spawnRandom = new Random();
+
+                for (int i = 0; i < spawnRandom.Next(2, 5); i++)
                 {
-                    monsters[i].PrintMonstersInfo(false);
-                    Console.WriteLine("");
-                    Console.WriteLine("");
-                    player.PrintPlayerInfo();
+                    monsters[spawnRandom.Next(0,2)].PrintMonstersInfo(false);
+                    Console.WriteLine("");                                
                 }
+                Console.WriteLine("");
+                Console.WriteLine("");
+                player.PrintPlayerInfo();
                 Console.WriteLine("");
                 Console.WriteLine("1. 공격");
                 Console.WriteLine("");
