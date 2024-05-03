@@ -15,10 +15,11 @@ namespace TeamPJT
         public int Atk { get; set; }
         public int Def { get; set; }
         public int Hp { get; set; }
+        public int Mp { get; set; }
         public int Gold { get; set; }
         public bool Isdead => Hp <= 0;
 
-        public Player(string name, string job, int level, int atk, int def, int hp, int gold)
+        public Player(string name, string job, int level, int atk, int def, int hp, int mp, int gold)
         {
             Name = name;
             Job = job;
@@ -26,6 +27,7 @@ namespace TeamPJT
             Atk = atk;
             Def = def;
             Hp = hp;
+            Mp = mp;
             Gold = gold;
             
         }

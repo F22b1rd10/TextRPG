@@ -17,7 +17,7 @@
 
             private void InitializeGame()
             {
-                player = new Player("Jiwon", "Programmer", 1, 50, 5, 100, 15000);
+                player = new Player("Jiwon", "Programmer", 1, 10, 5, 100, 50, 15000);
 
                 inventory = new List<Item>();
 
@@ -317,25 +317,38 @@
                 }
                 PlayerTurn();
 
-                void PlayerTurn()
+                //현황판
+                void StatusBoard()
                 {
-                    Console.Clear();
                     Console.WriteLine("몬스터 조우!!");
-                    Console.WriteLine($"현재 체력 : {player.Hp}");
+                    Console.WriteLine($"{player.Name}의 체력 : {player.Hp}");
+                    Console.WriteLine($"{player.Name}의 마나 : {player.Mp}");
                     Console.WriteLine("");
                     Console.WriteLine("등장 몬스터 : ");
                     for (int i = 0; i < selectedmonster.Count; i++)
                     {
-                        selectedmonster[i].PrintMonsterDescription(i+1);
+                        selectedmonster[i].PrintMonsterDescription(i + 1);
                     }
                     Console.WriteLine("");
+                }
+
+                
+
+                void PlayerTurn()
+                {
+                   Console.Clear();
+                    StatusBoard();
+
+                    Console.WriteLine("-------------------");
                     Console.WriteLine("1. 공격 ");
+                    Console.WriteLine("2. 스킬 ");
                     Console.WriteLine("0. 도망간다");
+                    Console.WriteLine("-------------------");
                     Random Getawayrandom = new Random();
                     int GetawayPercent = Getawayrandom.Next(1,13-(2*monstercount));
                     
 
-                    int keyInput = ConsoleUtility.PromptMenuChoice(0, monstercount);
+                    int keyInput = ConsoleUtility.PromptMenuChoice(0, 2);
                     switch (keyInput)
                     {
                         case 0:
@@ -356,24 +369,85 @@
                         case 1:
                             Console.WriteLine("누구를 공격하시겠습니까?");
                             PlayerAttack();
-                        break;
+                            break;
+
+                        case 2:
+                            PlayerSkillSelect();
+                            break;
                     }
                 }
 
                 void PlayerAttack()
                 {
-                    int chosenmonster = ConsoleUtility.AttackedMonsterChoice(1, monstercount);
-                    if (selectedmonster[chosenmonster-1].Isdead)
+                    Console.Clear();
+                    StatusBoard();
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine("0. 돌아가기");
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine();
+                    int chosenmonster = ConsoleUtility.AttackedMonsterChoice(0, monstercount);
+                    switch (chosenmonster)
                     {
-                        Console.WriteLine("이미 죽은 몬스터입니다.");
-                        PlayerAttack();
-                    }
-                    else
+                        case 0:
+                            PlayerTurn();
+                            break;
+
+
+                        default:
+                        if (selectedmonster[chosenmonster - 1].Isdead)
+                        {
+                            Console.WriteLine("이미 죽은 몬스터입니다.");
+                            PlayerAttack();
+                        }
+                        else
+                        {
+                            Console.WriteLine("플레이어의 공격");
+                            selectedmonster[chosenmonster - 1].TakeDamage(player.Atk);
+                            Thread.Sleep(1000);
+                            CheckVictory();
+                        }
+                            break;
+                     }
+                }
+
+                void PlayerSkillSelect()
+                {
+                    Console.Clear();
+                    StatusBoard();
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine("0. 돌아가기");
+                    Console.WriteLine("");
+                    Console.WriteLine("1. 몸통박치기 - Mp : 10");
+                    Console.WriteLine("선택한 적에게 방어력만큼의 데메지를 입힙니다.");
+                    Console.WriteLine("");
+                    Console.WriteLine("2. 알파 스트라이크 - Mp : 10");
+                    Console.WriteLine("선택한 적에게 공격력x2의 데미지를 입힙니다.");
+                    Console.WriteLine("");
+                    Console.WriteLine("3. 더블 스트라이크 - Mp : 15");
+                    Console.WriteLine("랜덤한 2명의 적에게 공격력x1.5의 데미지를 입힙니다.");
+                    Console.WriteLine("-------------------");
+
+                    int skillselect = ConsoleUtility.SkillSelect(0,3);
+                    switch(skillselect)
                     {
-                        Console.Write("플레이어의 공격");
-                        selectedmonster[chosenmonster-1].TakeDamage(player.Atk);
-                        Thread.Sleep(1000);
-                        CheckVictory();
+                        case 0:
+                            PlayerTurn();
+                            break;
+                        case 1:
+                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
+                            Thread.Sleep(1000);
+                            PlayerTurn();
+                            break;
+                        case 2:
+                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
+                            Thread.Sleep(1000);
+                            PlayerTurn();
+                            break;
+                        case 3:
+                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
+                            Thread.Sleep(1000);
+                            PlayerTurn();
+                            break;
                     }
                 }
 
@@ -395,6 +469,7 @@
                     {
                         Console.WriteLine("승리했습니다!");
                         Console.WriteLine("마을로 돌아갑니다.");
+                        player.Mp += 10;
                         Thread.Sleep(1000);
                         MainMenu();
                     }
@@ -406,7 +481,7 @@
 
                 void MonstersTurn()
                 {
-                    Console.Write("몬스터의 턴");
+                    Console.WriteLine("몬스터의 턴");
                     Thread.Sleep(1000);
                     for(int i =0; i < monstercount; i++)
                     {
@@ -419,8 +494,6 @@
                     Thread.Sleep(3000);
                     PlayerTurn();
                     
-                    //몬스터의 턴, 살아있는 몬스터가 공격해 플레이어가 피해를 받음(자동)
-                    //ㄱㅡㄴㄷㅔ ㅈㅜㄱㅇㅡㄴ ㅁㅗㄴㅅㅡㅌㅓㄱㅏ ㄱㅗㅇㄱㅕㄱㅎㅏㅁ..
                 }
 
             }
