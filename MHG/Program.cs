@@ -357,7 +357,14 @@ namespace TeamPJT
                 switch (ConsoleUtility.PromptMenuChoice(0, 1))
                 {
                     case 0:
-                        EnemyTurn(enemy);
+                        if (enemy.IsDead)
+                        {
+                            Victory();  
+                        }
+                        else
+                        {
+                            EnemyTurn(enemy);
+                        }
                         break;
                 }
             }
@@ -384,6 +391,11 @@ namespace TeamPJT
                         Console.WriteLine($"HP {player.Hp} -> {player.Hp}");
                         Console.WriteLine("");
 
+                        if(player.Hp <= 0)
+                        {
+                            player.Hp = 0;
+                        }
+
                     }
                     Console.WriteLine("0. 다음");
                 }
@@ -391,7 +403,14 @@ namespace TeamPJT
                 switch (ConsoleUtility.PromptMenuChoice(0, 0))
                 {
                     case 0:
-                        PlayerTurn();
+                        if (player.Hp == 0)
+                        {
+                            Lose();
+                        }
+                        else
+                        {
+                            PlayerTurn();
+                        }
                         break;
                 }
             }

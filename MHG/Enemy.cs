@@ -39,13 +39,19 @@ namespace TeamPJT
                 Console.ResetColor();
             }
 
-            Console.WriteLine($"Lv. {Level} {Name} HP {Hp}");
-
             if(Hp <= 0)
             {
                 IsDead = true;
+                
+                Console.ForegroundColor= ConsoleColor.DarkGray;
+                Console.WriteLine($"Lv. {Level} {Name} Dead");
+                Console.ResetColor();
                 //죽으면 공격 X
                 IsAtk = false;
+            }
+            else
+            {
+                Console.WriteLine($"Lv. {Level} {Name} HP {Hp}");
             }
         }
     }
