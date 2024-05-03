@@ -17,7 +17,7 @@
 
             private void InitializeGame()
             {
-                player = new Player("Jiwon", "Programmer", 1, 10, 5, 100, 15000);
+                player = new Player("Jiwon", "Programmer", 1, 50, 5, 100, 15000);
 
                 inventory = new List<Item>();
 
@@ -410,14 +410,17 @@
                     Thread.Sleep(1000);
                     for(int i =0; i < monstercount; i++)
                     {
-                        player.TakeDamage(monster[i+1].Atk);
+                        if (!selectedmonster[i].Isdead)
+                        {
+                            player.TakeDamage(selectedmonster[i].Atk);
+                        }
+                        
                     }
                     Thread.Sleep(3000);
                     PlayerTurn();
                     
                     //몬스터의 턴, 살아있는 몬스터가 공격해 플레이어가 피해를 받음(자동)
-                    //플레이어턴으로 이동
-                    //플레이어 사망시 자동 게임오버 처리했음(일단은)
+                    //ㄱㅡㄴㄷㅔ ㅈㅜㄱㅇㅡㄴ ㅁㅗㄴㅅㅡㅌㅓㄱㅏ ㄱㅗㅇㄱㅕㄱㅎㅏㅁ..
                 }
 
             }
