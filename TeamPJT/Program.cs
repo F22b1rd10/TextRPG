@@ -39,12 +39,9 @@
             }
 
             private void MainMenu()
-            {
-                // 구성
-                // 0. 화면 정리
+            {                              
                 Console.Clear();
-
-                // 1. 선택 멘트를 줌
+                                
                 Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
                 Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
@@ -57,10 +54,8 @@
                 Console.WriteLine("4. 전투");
                 Console.WriteLine("");
 
-                // 2. 선택한 결과를 검증함
                 int choice = ConsoleUtility.PromptMenuChoice(1, 4);
-
-                // 3. 선택한 결과에 따라 보내줌
+                                
                 switch (choice)
                 {
                     case 1:
@@ -73,7 +68,7 @@
                         StoreMenu();
                         break;
                     case 4:
-                        BattleMainMenu();
+                        BattleMain();
                         break;
                 }
                 MainMenu();
@@ -89,8 +84,6 @@
                 ConsoleUtility.PrintTextHighlights("Lv. ", player.Level.ToString("00"));
                 Console.WriteLine("");
                 Console.WriteLine($"{player.Name} ( {player.Job} )");
-
-                // TODO : 능력치 강화분을 표현하도록 변경
 
                 int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
                 int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
@@ -154,7 +147,7 @@
                 Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < inventory.Count; i++)
                 {
-                    inventory[i].PrintItemStatDescription(true, i + 1); // 나가기가 0번 고정, 나머지가 1번부터 배정
+                    inventory[i].PrintItemStatDescription(true, i + 1);
                 }
                 Console.WriteLine("");
                 Console.WriteLine("0. 나가기");
@@ -206,8 +199,7 @@
             private void PurchaseMenu(string? prompt = null)
             {
                 if (prompt != null)
-                {
-                    // 1초간 메시지를 띄운 다음에 다시 진행
+                {                    
                     Console.Clear();
                     ConsoleUtility.ShowTitle(prompt);
                     Thread.Sleep(1000);
@@ -259,8 +251,11 @@
                         break;
                 }
             }
-            
-            private void BattleMainMenu()
+            // TODO
+            // 1) 개체 수 랜덤
+            // 2) 표시 순서 랜덤
+            // 3) 플레이어 정보 출력
+            private void BattleMain()
             {
                 Console.Clear();
 
@@ -268,7 +263,10 @@
                 Console.WriteLine("");
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    monsters[i].PrintMonsters(false);
+                    monsters[i].PrintMonstersInfo(false);
+                    Console.WriteLine("");
+                    Console.WriteLine("");
+                    player.PrintPlayerInfo();
                 }
                 Console.WriteLine("");
                 Console.WriteLine("1. 공격");
@@ -277,16 +275,15 @@
                 switch (ConsoleUtility.PromptMenuChoice(1, 1))
                 {
                     case 1:
-                        BattleAttackMenu();
+                        PlayerTurn();
                         break;
                 }
             }
 
-            private void BattleAttackMenu(string? prompt = null)
+            private void PlayerTurn(string? prompt = null)
             {
                 if (prompt != null)
-                {
-                    // 1초간 메시지를 띄운 다음에 다시 진행
+                {                    
                     Console.Clear();
                     ConsoleUtility.ShowTitle(prompt);
                     Thread.Sleep(1000);
@@ -298,7 +295,10 @@
                 Console.WriteLine("");
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    monsters[i].PrintMonsters(true, i + 1);
+                    monsters[i].PrintMonstersInfo(true, i + 1);
+                    Console.WriteLine("");
+                    Console.WriteLine("");
+                    player.PrintPlayerInfo();
                 }
                 Console.WriteLine("");
                 Console.WriteLine("0. 취소");
@@ -309,33 +309,42 @@
                 switch (keyInput)
                 {
                     case 0:
-                        BattleMainMenu();
+                        BattleMain();
                         break;
                     default:
                         // 1 : 죽은 대상 선택
-                        if (monsters[keyInput - 1].IsDied == true)
+                        if (monsters[keyInput - 1].IsDead == true)
                         {
-                            BattleAttackMenu("대상은 이미 죽었습니다.");
+                            PlayerTurn("대상은 이미 죽었습니다.");
                         }
                         // 2 : 올바른 입력
                         else 
-                        {
-                            // 플레이어 공격 오차값 계산
-                            int playerMinAtk = player.Atk - (int)(player.Atk * 0.1);
-                            int playerMaxAtk = player.Atk + (int)(player.Atk * 0.1);
-                            int playerAvgAtk;
-
-                            Random Atk = new Random();
-                            playerAvgAtk = Atk.Next(playerMinAtk, playerMaxAtk);
-
-                            monsters[keyInput - 1].Hp -= playerAvgAtk;
-                            BattleAttackResult();
+                        {                                                        
+                            monsters[keyInput - 1].Hp -= PlayerAvgDmg();
+                            PlayerTurnResult();
                         }
                         break;
                 }
             }
+            // 플레이어 공격 오차값 계산
+            // TODO
+            // 1) 소수점일 때 반올림 기능 
+            private int PlayerAvgDmg()
+            {
+                int playerMinDmg = player.Atk - (int)(player.Atk * 0.1);
+                int playerMaxDmg = player.Atk + (int)(player.Atk * 0.1);
+                int playerAvgDmg;
 
-            private void BattleAttackResult()
+                Random Atk = new Random();
+                playerAvgDmg = Atk.Next(playerMinDmg, playerMaxDmg);
+
+                return playerAvgDmg;
+            }
+
+            // TODO
+            // 1) 위에서 공격한 몬스터 정보를 어떻게 가져오지? keyInput...
+            // 2) 공격 후 체력 변화, 죽었다면 dead
+            private void PlayerTurnResult()
             {
                 Console.Clear();
 
@@ -343,7 +352,7 @@
                 Console.WriteLine("");
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    monsters[i].PrintMonsters(false);
+                    monsters[i].PrintMonstersInfo(false);
                 }
                 Console.WriteLine("");
                 Console.WriteLine("1. 턴 종료");
@@ -352,12 +361,12 @@
                 switch (ConsoleUtility.PromptMenuChoice(1, 1))
                 {
                     case 1:
-                        BattleEnemyPhase();
+                        MonsterTurn();
                         break;
                 }
             }
 
-            private void BattleEnemyPhase()
+            private void MonsterTurn()
             {
                 Console.Clear();
 

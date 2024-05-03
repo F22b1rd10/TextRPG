@@ -13,28 +13,27 @@ namespace TeamPJT
         public string Name { get; }
         public int Atk { get; }
         public int Hp { get; set; }        
-        public bool IsDied { get; private set; }
+        public bool IsDead { get; private set; }
 
-        public Monster(int level, string name, int atk, int hp, bool isDied = false)
+        public Monster(int level, string name, int atk, int hp, bool isDead = false)
         {
             Level = level;
             Name = name;
             Atk = atk;
             Hp = hp;            
-            IsDied = isDied;
+            IsDead = isDead;
         }
 
-        internal void PrintMonsters(bool withNumber = false, int idx = 0)
+        internal void PrintMonstersInfo(bool withNumber = false, int idx = 0)
         {
-            CheckDied();
-            Console.Write("- ");
+            CheckMonsterDead();
             if (withNumber) // 공격 시 몬스터별 숫자 표기
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write($"{idx} ");
                 Console.ResetColor();
             }
-            if (IsDied)  // 사망 시 해당 몬스터 관련 텍스트 색상 변경
+            if (IsDead)  // 사망 시 해당 몬스터 관련 텍스트 색상 변경
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(ConsoleUtility.PadRightForMixedText("Lv." + Level.ToString(), 5));
@@ -88,11 +87,11 @@ namespace TeamPJT
         //        ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
         //    }
         //}
-        internal void CheckDied() // 사망 시 공격 불가 판정을 위한 메서드
+        internal void CheckMonsterDead() // 사망 시 공격 불가 판정을 위한 메서드
         {
             if (Hp <= 0)
             {
-                IsDied = true;
+                IsDead = true;
             }
         }
 
