@@ -13,7 +13,7 @@ namespace TeamPJT
         public string Job { get; }
         public int Level { get; }
         public int Atk { get; set; }
-        public int Def { get; }
+        public int Def { get; set; }
         public int Hp { get; set; }
         public int Gold { get; set; }
         public bool Isdead => Hp <= 0;

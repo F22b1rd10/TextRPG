@@ -48,7 +48,6 @@ namespace TeamPJT
         // 2. 장착관리에서 내가 어떤 아이템을 낄지 말지 결정할 때
         internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
         {
-
             Console.Write("- ");
             if (withNumber)
             {
@@ -72,7 +71,6 @@ namespace TeamPJT
             if (Atk != 0)
             {
                 Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
-                //Player.Atk += Atk
             }
             if (Def != 0)
             {

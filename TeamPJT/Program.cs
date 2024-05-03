@@ -312,7 +312,7 @@
                 // 몬스터 풀에서 랜덤하게 선택하여 실제 등장할 몬스터 리스트에 추가
                 for (int i = 0; i < monstercount; i++)
                 {
-                    int monsteridx = random.Next(0, monstercount);
+                    int monsteridx = random.Next(0, monstercount-1);
                     selectedmonster.Add(stage1monspool[monsteridx].BattleMonsters());
                 }
                 PlayerTurn();
@@ -380,8 +380,6 @@
                 void CheckVictory()
                 {
                     //todo
-                    // 현재 문제점 플레이어의 공격이 참조한 원래 몬스터를 공격하고 있음
-                    // 플레이어의 공격이 선택한 몬스터의 번호를 공격하는게 아니고 몬스터 풀의 몬스터 인덱스 자체를 공격하고있따
                     // 게임오버는 잘됨
 
                     int aliveMonsterCount = 0;
