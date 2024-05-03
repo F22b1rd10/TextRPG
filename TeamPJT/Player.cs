@@ -18,6 +18,9 @@ namespace TeamPJT
         public int Mp { get; set; }
         public int Gold { get; set; }
         public bool Isdead => Hp <= 0;
+        public int Skill1 { get; }
+        public int Skill2 { get; }
+        public int Skill3 { get; }
 
         public Player(string name, string job, int level, int atk, int def, int hp, int mp, int gold)
         {
@@ -29,12 +32,19 @@ namespace TeamPJT
             Hp = hp;
             Mp = mp;
             Gold = gold;
+            Skill1 = def;
+            Skill2 = atk * 3;
+            Skill3 = atk * 2;
             
         }
 
+
         internal void TakeDamage(int damage)
         {
-            Hp -= damage;
+            int finalDamage = Math.Max(1,damage - Def);
+            
+            Hp -= finalDamage;
+
             if (Isdead)
             {
                 GameManager gamemanager = new GameManager();
@@ -44,7 +54,7 @@ namespace TeamPJT
                 Thread.Sleep(3000);
                 gamemanager.MainMenu();
             }
-            else Console.WriteLine($"{Name}이(가) {damage}의 데미지를 받았습니다. 남은 체력: {Hp}");
+            else Console.WriteLine($"{Name}이(가) {finalDamage}의 데미지를 받았습니다. 남은 체력: {Hp}");
         }
 
     }

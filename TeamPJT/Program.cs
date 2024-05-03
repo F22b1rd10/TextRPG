@@ -107,6 +107,7 @@
                 ConsoleUtility.PrintTextHighlights("공격력 : ", (player.Atk + bonusAtk).ToString(), bonusAtk > 0 ? $" (+{bonusAtk})" : "");
                 ConsoleUtility.PrintTextHighlights("방어력 : ", (player.Def + bonusDef).ToString(), bonusDef > 0 ? $" (+{bonusDef})" : "");
                 ConsoleUtility.PrintTextHighlights("체 력 : ", (player.Hp + bonusHp).ToString(), bonusHp > 0 ? $" (+{bonusHp})" : "");
+                ConsoleUtility.PrintTextHighlights("마 나 : ", (player.Mp).ToString(),"");
 
                 ConsoleUtility.PrintTextHighlights("Gold : ", player.Gold.ToString());
                 Console.WriteLine("");
@@ -420,35 +421,145 @@
                     Console.WriteLine("1. 몸통박치기 - Mp : 10");
                     Console.WriteLine("선택한 적에게 방어력만큼의 데메지를 입힙니다.");
                     Console.WriteLine("");
-                    Console.WriteLine("2. 알파 스트라이크 - Mp : 10");
-                    Console.WriteLine("선택한 적에게 공격력x2의 데미지를 입힙니다.");
+                    Console.WriteLine("2. 알파 스트라이크 - Mp : 15");
+                    Console.WriteLine("선택한 적에게 공격력x3의 데미지를 입힙니다.");
                     Console.WriteLine("");
-                    Console.WriteLine("3. 더블 스트라이크 - Mp : 15");
-                    Console.WriteLine("랜덤한 2명의 적에게 공격력x1.5의 데미지를 입힙니다.");
+                    Console.WriteLine("3. 더블 스트라이크 - Mp : 20");
+                    Console.WriteLine("랜덤한 2명의 적에게 공격력x2의 데미지를 입힙니다.");
                     Console.WriteLine("-------------------");
 
                     int skillselect = ConsoleUtility.SkillSelect(0,3);
-                    switch(skillselect)
+                    if(skillselect == 0 )
                     {
-                        case 0:
-                            PlayerTurn();
-                            break;
-                        case 1:
-                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
-                            Thread.Sleep(1000);
-                            PlayerTurn();
-                            break;
-                        case 2:
-                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
-                            Thread.Sleep(1000);
-                            PlayerTurn();
-                            break;
-                        case 3:
-                            Console.WriteLine("미구현입니다. 이전화면으로 돌아갑니다");
-                            Thread.Sleep(1000);
-                            PlayerTurn();
-                            break;
+                        PlayerTurn();
                     }
+                    else if(skillselect == 1)
+                    {
+                        int chosenmonster = ConsoleUtility.AttackedMonsterChoice(0, monstercount);
+                        switch (chosenmonster)
+                        {
+                            case 0:
+                                PlayerTurn();
+                                break;
+
+
+                            default:
+                                if (selectedmonster[chosenmonster - 1].Isdead)
+                                {
+                                    Console.WriteLine("이미 죽은 몬스터입니다.");
+                                    Thread.Sleep(1000);
+                                    PlayerTurn();
+                                }
+                                else
+                                {
+                                    if (player.Mp > 9)
+                                    {
+                                        player.Mp -= 10;
+                                        Console.WriteLine("플레이어의 몸통박치기");
+                                        selectedmonster[chosenmonster - 1].TakeDamage(player.Skill1);
+                                        Thread.Sleep(1000);
+                                        CheckVictory();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("마나가 부족합니다");
+                                        Thread.Sleep(1000);
+                                        PlayerTurn();
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else if (skillselect == 2)
+                    {
+                        int chosenmonster = ConsoleUtility.AttackedMonsterChoice(0, monstercount);
+                        switch (chosenmonster)
+                        {
+                            case 0:
+                                PlayerTurn();
+                                break;
+
+
+                            default:
+                                if (selectedmonster[chosenmonster - 1].Isdead)
+                                {
+                                    Console.WriteLine("이미 죽은 몬스터입니다.");
+                                    Thread.Sleep(1000);
+                                    PlayerTurn();
+                                }
+                                else
+                                {
+                                    if (player.Mp > 14)
+                                    {
+                                        player.Mp -= 15;
+                                        Console.WriteLine("플레이어의 알파 스트라이크");
+                                        selectedmonster[chosenmonster - 1].TakeDamage(player.Skill2);
+                                        Thread.Sleep(1000);
+                                        CheckVictory();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("마나가 부족합니다");
+                                        Thread.Sleep(1000);
+                                        PlayerTurn();
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        if(player.Mp>19)
+                        {
+                            // 살아있는 몬스터 수 계산
+                            int aliveMonsterCount = selectedmonster.Count(monster => !monster.Isdead);
+
+                            if (aliveMonsterCount > 1)
+                            {
+                                // 첫 번째 타겟 선택
+                                Random random = new Random();
+                                int doubleAttackTarget1 = random.Next(0, monstercount);
+
+                                // 죽은 적을 타겟하지 않도록 확인
+                                while (selectedmonster[doubleAttackTarget1].Isdead)
+                                {
+                                    doubleAttackTarget1 = random.Next(0, monstercount);
+                                }
+
+                                // 두 번째 타겟 선택하는데 첫 타겟과 중복되지 않으면서 죽은적도 타겟하지 않게
+                                int doubleAttackTarget2;
+                                do
+                                {
+                                    doubleAttackTarget2 = random.Next(0, monstercount);
+                                } while (doubleAttackTarget2 == doubleAttackTarget1 || selectedmonster[doubleAttackTarget2].Isdead);
+
+                                // 두 명의 적을 공격
+                                player.Mp -= 1;
+                                Console.WriteLine("플레이어의 더블 스트라이크");
+                                selectedmonster[doubleAttackTarget1].TakeDamage(player.Skill3);
+                                selectedmonster[doubleAttackTarget2].TakeDamage(player.Skill3);
+                                Thread.Sleep(1000);
+                                CheckVictory();
+                            }
+                            else
+                            {
+                                // 솔직히 남은적 두번치게 하고 싶었는데 못하겠음 봐주셈
+                                Console.WriteLine("더블 스트라이크를 사용할 수 없습니다. 살아있는 몬스터가 한마리뿐입니다.");
+                                Thread.Sleep(1000);
+                                PlayerTurn();
+                            }
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("마나가 부족합니다");
+                            Thread.Sleep(1000);
+                            PlayerSkillSelect();
+                        }
+                    }
+
+                    Thread.Sleep(1000);
+                    CheckVictory();
                 }
 
                 void CheckVictory()
@@ -469,7 +580,11 @@
                     {
                         Console.WriteLine("승리했습니다!");
                         Console.WriteLine("마을로 돌아갑니다.");
-                        player.Mp += 10;
+                        if(player.Mp < 41)
+                        {
+                            player.Mp += 10;
+                        }
+                        
                         Thread.Sleep(1000);
                         MainMenu();
                     }
