@@ -137,13 +137,18 @@ namespace TeamPJT
             IsPurchased = true;
         }
 
-        //아이템 스텟 적용
+        //아이템 스텟 적
         public void ItemStatApply(Player player)
         {
             if (IsEquipped)
             {
                 player.Atk += Atk;
                 player.Def += Def;
+            }
+            else if(!IsEquipped)
+            {
+                player.Atk -= Atk;
+                player.Def -= Def;
             }
         }
     }
