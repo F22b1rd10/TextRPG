@@ -49,6 +49,8 @@ namespace TeamPJT
         internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
         {
             Console.Write("- ");
+            
+
             if (withNumber)
             {
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -133,6 +135,16 @@ namespace TeamPJT
         internal void Purchase()
         {
             IsPurchased = true;
+        }
+
+        //아이템 스텟 적용
+        public void ItemStatApply(Player player)
+        {
+            if (IsEquipped)
+            {
+                player.Atk += Atk;
+                player.Def += Def;
+            }
         }
     }
 }

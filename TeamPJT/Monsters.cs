@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 
@@ -46,6 +47,7 @@ namespace TeamPJT
             int evasion = evasionrandom.Next(1, 101);
             Random criticalrandom = new Random();
             int critical = criticalrandom.Next(1, 101);
+
 
             // 치명타 계산 후 회피 계산
             // 치명타 확률은 if(critical < n) 에서 (n-1)*100% 의 확률임

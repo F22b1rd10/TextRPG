@@ -177,6 +177,7 @@
                         break;
                     default:
                         inventory[KeyInput - 1].ToggleEquipStatus();
+                        inventory[KeyInput - 1].ItemStatApply(player);
                         EquipMenu();
                         break;
                 }
@@ -303,6 +304,7 @@
                 stage1monspool.Add(monster[1].BattleMonsters());
                 stage1monspool.Add(monster[2].BattleMonsters());
 
+
                 // 실제 등장할 몬스터 리스트
                 List<Monsters> selectedmonster = new List<Monsters>();
 
@@ -382,6 +384,7 @@
                 {
                     Console.Clear();
                     StatusBoard();
+                    int damage = (int)(player.Atk * (0.9 + new Random().NextDouble() * 0.2));
                     Console.WriteLine("-------------------");
                     Console.WriteLine("0. 돌아가기");
                     Console.WriteLine("-------------------");
@@ -403,7 +406,7 @@
                         else
                         {
                             Console.WriteLine("플레이어의 공격");
-                            selectedmonster[chosenmonster - 1].TakeDamage(player.Atk);
+                            selectedmonster[chosenmonster - 1].TakeDamage(damage);
                             Thread.Sleep(1000);
                             CheckVictory();
                         }
@@ -511,16 +514,15 @@
                     {
                         if(player.Mp>19)
                         {
-                            // 살아있는 몬스터 수 계산
+                            // 살아있는 몬스터 수
                             int aliveMonsterCount = selectedmonster.Count(monster => !monster.Isdead);
 
                             if (aliveMonsterCount > 1)
                             {
-                                // 첫 번째 타겟 선택
                                 Random random = new Random();
                                 int doubleAttackTarget1 = random.Next(0, monstercount);
 
-                                // 죽은 적을 타겟하지 않도록 확인
+                                // 죽은 적은 타겟하지 않는 첫 번째 타겟 설정
                                 while (selectedmonster[doubleAttackTarget1].Isdead)
                                 {
                                     doubleAttackTarget1 = random.Next(0, monstercount);
@@ -533,8 +535,7 @@
                                     doubleAttackTarget2 = random.Next(0, monstercount);
                                 } while (doubleAttackTarget2 == doubleAttackTarget1 || selectedmonster[doubleAttackTarget2].Isdead);
 
-                                // 두 명의 적을 공격
-                                player.Mp -= 1;
+                                player.Mp -= 20;
                                 Console.WriteLine("플레이어의 더블 스트라이크");
                                 selectedmonster[doubleAttackTarget1].TakeDamage(player.Skill3);
                                 selectedmonster[doubleAttackTarget2].TakeDamage(player.Skill3);

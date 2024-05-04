@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static TeamPJT.Program;
@@ -27,7 +28,9 @@ namespace TeamPJT
             Name = name;
             Job = job;
             Level = level;
+
             Atk = atk;
+
             Def = def;
             Hp = hp;
             Mp = mp;
@@ -35,7 +38,7 @@ namespace TeamPJT
             Skill1 = def;
             Skill2 = atk * 3;
             Skill3 = atk * 2;
-            
+
         }
 
 
