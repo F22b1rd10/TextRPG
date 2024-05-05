@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MHG;
+using System;
 
 namespace TeamPJT
 {
@@ -12,6 +13,8 @@ namespace TeamPJT
             private List<Item> storeInventory;
 
             private List<Enemy> enemyInfo;
+
+            private List<Quest> questList;
 
             public GameManager()
             {
@@ -33,6 +36,13 @@ namespace TeamPJT
                 enemyInfo.Add(new Enemy(2, "미니언", 15, 5));
                 enemyInfo.Add(new Enemy(3, "공허충", 10, 8));
                 enemyInfo.Add(new Enemy(5, "대포미니언", 25, 8));
+
+                questList = new List<Quest>();
+                questList.Add(new Quest("마을을 위협하는 미니언 처치",
+                    "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n모험가인 자네가 좀 처치해주게!",
+                    "미니언 5마리 처치", "쓸만한 방패", 5));
+                questList.Add(new Quest("장비를 장착해보자", "새로운 장비를 장착해보자!", 
+                    "인벤토리에서 장비 장착", "아이템", 3));
             }
 
             public void StartGame()
@@ -59,10 +69,11 @@ namespace TeamPJT
                 Console.WriteLine("2. 인벤토리");
                 Console.WriteLine("3. 상점");
                 Console.WriteLine("4. 전투 시작");
+                Console.WriteLine("5. 퀘스트");
                 Console.WriteLine("");
 
                 // 2. 선택한 결과를 검증함
-                int choice = ConsoleUtility.PromptMenuChoice(1, 4);
+                int choice = ConsoleUtility.PromptMenuChoice(1, 5);
 
                 // 3. 선택한 결과에 따라 보내줌
                 switch (choice)
@@ -78,6 +89,9 @@ namespace TeamPJT
                         break;
                     case 4:
                         BattleMenu();
+                        break;
+                    case 5:
+                        QuestMenu();
                         break;
                 }
                 MainMenu();
@@ -298,7 +312,7 @@ namespace TeamPJT
                 }
             }
 
-            public void PlayerTurn()
+            private void PlayerTurn()
             {
                 Console.Clear();
 
@@ -335,7 +349,7 @@ namespace TeamPJT
                 }
             }
 
-            public void AttackEnemy(Enemy enemy)
+            private void AttackEnemy(Enemy enemy)
             {
                 //Player의 공격력의 90% ~ 110% 사이의 랜덤한 값
                 int damage = (int)(player.Atk * (0.9 + new Random().NextDouble() * 0.2));
@@ -369,7 +383,7 @@ namespace TeamPJT
                 }
             }
 
-            public void EnemyTurn(Enemy enemy)
+            private void EnemyTurn(Enemy enemy)
             {
                 Console.Clear();
 
@@ -416,7 +430,7 @@ namespace TeamPJT
             }
 
 
-            public void Victory()
+            private void Victory()
             {
                 Console.Clear();
                 ConsoleUtility.ShowTitle("Battle!! - Result");
@@ -440,7 +454,7 @@ namespace TeamPJT
                 }
             }
 
-            public void Lose()
+            private void Lose()
             {
                 Console.Clear();
                 ConsoleUtility.ShowTitle("Battle!! - Result");
@@ -462,6 +476,78 @@ namespace TeamPJT
                 }
             }
 
+            private void QuestMenu()
+            {
+                Console.Clear();
+                ConsoleUtility.ShowTitle("Quest!!");
+                Console.WriteLine("");
+                for (int i = 0; i < questList.Count; i++)
+                {
+                    bool isAccept = questList[i].IsAccept && !questList[i].IsComlete;
+                    questList[i].PrintQuestDescription(true, i + 1);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("0. 돌아가기");
+                Console.WriteLine("");
+                
+                int keyInput = ConsoleUtility.PromptMenuChoice(0, questList.Count);
+
+                switch (keyInput)
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                    default:
+                        var selectedQuest = questList[keyInput - 1];
+                        Console.Clear();
+                        Console.WriteLine(selectedQuest.Que);
+                        Console.WriteLine("");
+                        Console.WriteLine(selectedQuest.Des);
+                        Console.WriteLine("");
+                        Console.WriteLine($"- {selectedQuest.Goal}");
+                        Console.WriteLine("");
+                        Console.WriteLine($"- 보상 - {selectedQuest.GoldReward} / {selectedQuest.ItemReward}");
+                        Console.WriteLine("");
+                        Console.WriteLine("1. 수락");
+                        Console.WriteLine("2. 거절");
+                        Console.WriteLine("");
+
+                        switch (ConsoleUtility.PromptMenuChoice(1, 2))
+                        {
+                            case 1:
+                                questList[keyInput - 1].Accept();
+                                if (selectedQuest.IsComlete)
+                                {
+                                    Console.WriteLine("1. 보상받기");
+                                    Console.WriteLine("2. 돌아가기");
+                                    int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
+
+                                    switch (rewardChoice)
+                                    {
+                                        case 1:
+                                            //골드 지급
+                                            player.Gold += selectedQuest.GoldReward;
+                                            //아이템 지급
+                                            //inventory.Add(selectedQuest.ItemReward);
+
+                                            //퀘스트 삭제
+                                            questList.RemoveAt(keyInput - 1);
+                                            break;
+
+                                        case 2:
+                                            QuestMenu();
+                                            break;
+                                    }
+                                }
+                                break;
+
+                            case 2:
+                                QuestMenu();
+                                break;
+                        }
+                        break;
+                }
+            }
         }
 
         public class Program1
