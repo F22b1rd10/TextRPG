@@ -68,8 +68,7 @@ namespace TeamPJT
 
             if(Progress >= TargetCount)
             {
-                //Complete();
-                IsComplete = true;
+                Complete();
             }
         }
     }
