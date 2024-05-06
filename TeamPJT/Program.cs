@@ -513,11 +513,15 @@
                     Console.WriteLine("선택한 적에게 방어력만큼의 데메지를 입힙니다.");
                     Console.WriteLine("");
                     Console.WriteLine("2. 알파 스트라이크 - Mp : 15");
-                    Console.WriteLine("선택한 적에게 공격력x3의 데미지를 입힙니다.");
+                    Console.WriteLine("선택한 적에게 공격력x2의 데미지를 입힙니다.");
                     Console.WriteLine("");
                     Console.WriteLine("3. 더블 스트라이크 - Mp : 20");
-                    Console.WriteLine("랜덤한 2명의 적에게 공격력x2의 데미지를 입힙니다.");
+                    Console.WriteLine("랜덤한 2명의 적에게 공격력x1.5의 데미지를 입힙니다.");
                     Console.WriteLine("-------------------");
+                    int Skill1damage = (int)(player.Def * (0.9 + new Random().NextDouble() * 0.2));
+                    int Skill2damage = (int)(player.Atk * 2 * (0.9 + new Random().NextDouble() * 0.2));
+                    int Skill3_1damage = (int)(player.Atk * 1.5 * (0.9 + new Random().NextDouble() * 0.2));
+                    int Skill3_2damage = (int)(player.Atk * 1.5 * (0.9 + new Random().NextDouble() * 0.2));
 
                     int skillselect = ConsoleUtility.SkillSelect(0, 3);
                     if (skillselect == 0)
@@ -547,7 +551,7 @@
                                     {
                                         player.Mp -= 10;
                                         Console.WriteLine("플레이어의 몸통박치기");
-                                        selectedmonster[chosenmonster - 1].TakeDamage(player.Skill1);
+                                        selectedmonster[chosenmonster - 1].TakeDamage(Skill1damage);
                                         Thread.Sleep(1000);
                                         CheckVictory();
                                     }
@@ -584,7 +588,7 @@
                                     {
                                         player.Mp -= 15;
                                         Console.WriteLine("플레이어의 알파 스트라이크");
-                                        selectedmonster[chosenmonster - 1].TakeDamage(player.Skill2);
+                                        selectedmonster[chosenmonster - 1].TakeDamage(Skill2damage);
                                         Thread.Sleep(1000);
                                         CheckVictory();
                                     }
@@ -625,8 +629,8 @@
 
                                 player.Mp -= 20;
                                 Console.WriteLine("플레이어의 더블 스트라이크");
-                                selectedmonster[doubleAttackTarget1].TakeDamage(player.Skill3);
-                                selectedmonster[doubleAttackTarget2].TakeDamage(player.Skill3);
+                                selectedmonster[doubleAttackTarget1].TakeDamage(Skill3_1damage);
+                                selectedmonster[doubleAttackTarget2].TakeDamage(Skill3_2damage);
                                 Thread.Sleep(1000);
                                 CheckVictory();
                             }
