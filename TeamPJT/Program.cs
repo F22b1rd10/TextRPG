@@ -24,7 +24,7 @@
                 Console.WriteLine("");
                 for (int i = 0; i < questList.Count; i++)
                 {
-                    bool isAccept = questList[i].IsAccept && !questList[i].IsComlete;
+                    bool isAccept = questList[i].IsAccept && !questList[i].IsComplete;
                     questList[i].PrintQuestDescription(true, i + 1);
                 }
                 Console.WriteLine("");
@@ -47,11 +47,36 @@
                         Console.WriteLine("");
                         Console.WriteLine($"- {selectedQuest.Goal}");
                         Console.WriteLine("");
-                        Console.WriteLine($"- 보상 - {selectedQuest.GoldReward} / {selectedQuest.ItemReward}");
+                        Console.WriteLine($"- 보상 - {selectedQuest.GoldReward} G");
                         Console.WriteLine("");
                         Console.WriteLine("1. 수락");
                         Console.WriteLine("2. 거절");
                         Console.WriteLine("");
+
+                        if (selectedQuest.IsComplete)
+                        {
+                            Console.WriteLine("1. 보상받기");
+                            Console.WriteLine("2. 돌아가기");
+                            Console.WriteLine("");
+                            int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
+
+                            switch (rewardChoice)
+                            {
+                                case 1:
+                                    //골드 지급
+                                    player.Gold += selectedQuest.GoldReward;
+                                    //퀘스트 삭제
+                                    questList.RemoveAt(keyInput - 1);
+                                    QuestMenu();
+
+                                    
+                                    break;
+
+                                case 2:
+                                    QuestMenu();
+                                    break;
+                            }
+                        }
 
                         switch (ConsoleUtility.PromptMenuChoice(1, 2))
                         {
@@ -65,29 +90,6 @@
                                 break;
                         }
 
-                        if (selectedQuest.IsComlete)
-                        {
-                            Console.WriteLine("1. 보상받기");
-                            Console.WriteLine("2. 돌아가기");
-                            int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
-
-                            switch (rewardChoice)
-                            {
-                                case 1:
-                                    //골드 지급
-                                    player.Gold += selectedQuest.GoldReward;
-                                    //아이템 지급
-                                    //inventory.Add(selectedQuest.ItemReward);
-
-                                    //퀘스트 삭제
-                                    questList.RemoveAt(keyInput - 1);
-                                    break;
-
-                                case 2:
-                                    QuestMenu();
-                                    break;
-                            }
-                        }
                         break;
                 }
 
@@ -117,11 +119,9 @@
                 monster.Add(new Monsters("드래곤", 30, new Random().Next(80, 100), 40, 200));
 
                 questList = new List<Quest>();
-                questList.Add(new Quest("마을을 위협하는 미니언 처치",
-                    "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n모험가인 자네가 좀 처치해주게!",
-                    "미니언 5마리 처치", "쓸만한 방패", 5, 1));
-                questList.Add(new Quest("장비를 장착해보자", "새로운 장비를 장착해보자!",
-                    "인벤토리에서 장비 장착", "아이템", 3, 1));
+                questList.Add(new Quest("마을을 위협하는 고블린 처치",
+                    "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n마을주민들의 안전을 위해서라도 모험가인 자네가 좀 처치해주게!",
+                    "고블린 5마리 처치", 500, 5));
             }
 
             public void StartGame()
@@ -499,6 +499,21 @@
                                 Console.WriteLine("플레이어의 공격");
                                 selectedmonster[chosenmonster - 1].TakeDamage(damage);
                                 Thread.Sleep(1000);
+
+                                if (selectedmonster[chosenmonster - 1].Isdead)
+                                {
+                                    foreach (var quest in questList)
+                                    {
+                                        if (quest.Que == "마을을 위협하는 고블린 처치" && !quest.IsComplete)
+                                        {
+                                            if (quest.Progress >= quest.TargetCount)
+                                            {
+                                                quest.Complete(); 
+                                            }
+                                            quest.UpdateProgress();
+                                        }
+                                    }
+                                }
                                 CheckVictory();
                             }
                             break;
