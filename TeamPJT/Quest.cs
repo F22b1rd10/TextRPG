@@ -13,22 +13,24 @@ namespace TeamPJT
         public string Que;
         public string Des;
         public string Goal;
-        public string ItemReward;
+        //public string Monster;
         public int GoldReward;
         public int TargetCount;
         public bool IsAccept;
-        public bool IsComlete;
+        public bool IsComplete;
+        public int Progress;
 
-        public Quest(string que, string des, string goal, string itemReward, int goldReward, int targetCount, bool isAccept = false, bool isComplete = false)
+        public Quest(string que, string des, string goal,/* string monster*/ int goldReward, int targetCount, bool isAccept = false, bool isComplete = false)
         {
             Que = que;
             Des = des;
             Goal = goal;
+            //Monster = monster;
             GoldReward = goldReward;
-            ItemReward = itemReward;
             TargetCount = targetCount;
             IsAccept = isAccept;
-            IsComlete = isComplete;
+            IsComplete = isComplete;
+            Progress = 0;
         }
 
         public void PrintQuestDescription(bool withNumber = false, int idx = 0)
@@ -43,7 +45,7 @@ namespace TeamPJT
             if (IsAccept)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write("(진행중)");
+                Console.Write($"(진행중) - {Progress}/{TargetCount} ");
                 Console.ResetColor();
             }
 
@@ -57,7 +59,18 @@ namespace TeamPJT
 
         internal void Complete()
         {
-            IsComlete = true;
+            IsComplete = true;
+        }
+
+        internal void UpdateProgress()
+        {
+            Progress += 1;
+
+            if(Progress >= TargetCount)
+            {
+                //Complete();
+                IsComplete = true;
+            }
         }
     }
 }
