@@ -15,16 +15,18 @@ namespace MHG
         public string Goal;
         public string ItemReward;
         public int GoldReward;
+        public int TargetCount;
         public bool IsAccept;
         public bool IsComlete;
 
-        public Quest(string que, string des, string goal, string itemReward, int goldReward, bool isAccept = false, bool isComplete = false)
+        public Quest(string que, string des, string goal, string itemReward, int goldReward, int targetCount, bool isAccept = false, bool isComplete = false)
         { 
             Que = que;
             Des = des;
             Goal = goal;
             GoldReward = goldReward;
             ItemReward = itemReward;
+            TargetCount = targetCount;
             IsAccept = isAccept;
             IsComlete = isComplete;
         }
@@ -51,6 +53,11 @@ namespace MHG
         internal void Accept()
         {
             IsAccept = true;
+        }
+        
+        internal void Complete()
+        {
+            IsComlete = true;
         }
     }
 }
