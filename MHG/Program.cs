@@ -16,6 +16,8 @@ namespace TeamPJT
 
             private List<Quest> questList;
 
+            //private List<Item> questItem;
+
             public GameManager()
             {
                 InitializeGame();
@@ -40,9 +42,12 @@ namespace TeamPJT
                 questList = new List<Quest>();
                 questList.Add(new Quest("마을을 위협하는 미니언 처치",
                     "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n모험가인 자네가 좀 처치해주게!",
-                    "미니언 5마리 처치", "쓸만한 방패", 5));
+                    "미니언 5마리 처치", "쓸만한 방패", 5, 5));
                 questList.Add(new Quest("장비를 장착해보자", "새로운 장비를 장착해보자!", 
-                    "인벤토리에서 장비 장착", "아이템", 3));
+                    "인벤토리에서 장비 장착", "아이템", 3, 1));
+
+                //questItem = new List<Item>();
+                //questItem.Add(new Item("쓸만한 방패", "쓸만하다", ItemType.WEAPON, 0, 5, 0, 500));
             }
 
             public void StartGame()
@@ -516,37 +521,40 @@ namespace TeamPJT
                         {
                             case 1:
                                 questList[keyInput - 1].Accept();
-                                if (selectedQuest.IsComlete)
-                                {
-                                    Console.WriteLine("1. 보상받기");
-                                    Console.WriteLine("2. 돌아가기");
-                                    int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
-
-                                    switch (rewardChoice)
-                                    {
-                                        case 1:
-                                            //골드 지급
-                                            player.Gold += selectedQuest.GoldReward;
-                                            //아이템 지급
-                                            //inventory.Add(selectedQuest.ItemReward);
-
-                                            //퀘스트 삭제
-                                            questList.RemoveAt(keyInput - 1);
-                                            break;
-
-                                        case 2:
-                                            QuestMenu();
-                                            break;
-                                    }
-                                }
+                                QuestMenu();
                                 break;
 
                             case 2:
                                 QuestMenu();
                                 break;
                         }
+
+                        if (selectedQuest.IsComlete)
+                        {
+                            Console.WriteLine("1. 보상받기");
+                            Console.WriteLine("2. 돌아가기");
+                            int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
+
+                            switch (rewardChoice)
+                            {
+                                case 1:
+                                    //골드 지급
+                                    player.Gold += selectedQuest.GoldReward;
+                                    //아이템 지급
+                                    //inventory.Add(selectedQuest.ItemReward);
+
+                                    //퀘스트 삭제
+                                    questList.RemoveAt(keyInput - 1);
+                                    break;
+
+                                case 2:
+                                    QuestMenu();
+                                    break;
+                            }
+                        }
                         break;
                 }
+
             }
         }
 
