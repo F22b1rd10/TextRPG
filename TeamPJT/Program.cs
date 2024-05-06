@@ -57,37 +57,40 @@
                         {
                             case 1:
                                 questList[keyInput - 1].Accept();
-                                if (selectedQuest.IsComlete)
-                                {
-                                    Console.WriteLine("1. 보상받기");
-                                    Console.WriteLine("2. 돌아가기");
-                                    int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
-
-                                    switch (rewardChoice)
-                                    {
-                                        case 1:
-                                            //골드 지급
-                                            player.Gold += selectedQuest.GoldReward;
-                                            //아이템 지급
-                                            //inventory.Add(selectedQuest.ItemReward);
-
-                                            //퀘스트 삭제
-                                            questList.RemoveAt(keyInput - 1);
-                                            break;
-
-                                        case 2:
-                                            QuestMenu();
-                                            break;
-                                    }
-                                }
+                                QuestMenu();
                                 break;
 
                             case 2:
                                 QuestMenu();
                                 break;
                         }
+
+                        if (selectedQuest.IsComlete)
+                        {
+                            Console.WriteLine("1. 보상받기");
+                            Console.WriteLine("2. 돌아가기");
+                            int rewardChoice = ConsoleUtility.PromptMenuChoice(1, 2);
+
+                            switch (rewardChoice)
+                            {
+                                case 1:
+                                    //골드 지급
+                                    player.Gold += selectedQuest.GoldReward;
+                                    //아이템 지급
+                                    //inventory.Add(selectedQuest.ItemReward);
+
+                                    //퀘스트 삭제
+                                    questList.RemoveAt(keyInput - 1);
+                                    break;
+
+                                case 2:
+                                    QuestMenu();
+                                    break;
+                            }
+                        }
                         break;
                 }
+
             }
 
             private void InitializeGame()
