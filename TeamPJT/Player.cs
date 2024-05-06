@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static TeamPJT.Program;
@@ -44,8 +43,8 @@ namespace TeamPJT
 
         internal void TakeDamage(int damage)
         {
-            int finalDamage = Math.Max(1,damage - Def);
-            
+            int finalDamage = Math.Max(1, damage - Def);
+
             Hp -= finalDamage;
 
             if (Isdead)

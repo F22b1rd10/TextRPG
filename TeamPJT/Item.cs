@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace TeamPJT
 {
@@ -49,7 +47,7 @@ namespace TeamPJT
         internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
         {
             Console.Write("- ");
-            
+
 
             if (withNumber)
             {
@@ -93,7 +91,7 @@ namespace TeamPJT
 
         public void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
         {
-            
+
             Console.Write("- ");
             // 장착관리 전용
             if (withNumber)
@@ -129,7 +127,7 @@ namespace TeamPJT
         internal void ToggleEquipStatus()
         {
             IsEquipped = !IsEquipped;
-            
+
         }
 
         internal void Purchase()
@@ -145,7 +143,7 @@ namespace TeamPJT
                 player.Atk += Atk;
                 player.Def += Def;
             }
-            else if(!IsEquipped)
+            else if (!IsEquipped)
             {
                 player.Atk -= Atk;
                 player.Def -= Def;
