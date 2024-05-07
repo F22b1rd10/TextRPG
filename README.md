@@ -12,10 +12,13 @@
 ---
 + 적재적소에 스킬을 사용하여 위기를 돌파하세요!
 ![use skill](https://github.com/F22b1rd10/TextRPG/blob/main/use%20skill.png)
-+
+
++ 퀘스트를 클리어해서 더욱 더 많은 부를 쌓으세요!
 ![]()
-+
-![]()
+
++ 돈으로 아이템을 구매해 더욱 강해지세요!
+![buy item](https://github.com/F22b1rd10/TextRPG/blob/main/buy%20item.png)
+
 
 ### 개발 기간
 ---
