@@ -9,7 +9,13 @@
 더 많은 부와 명예를 위해 싸우세요! 
 
 ### 게임 소개
-
+---
++ 적재적소에 스킬을 사용하여 위기를 돌파하세요!
+![use skill](https://github.com/F22b1rd10/TextRPG/blob/main/use%20skill.png)
++
+![]()
++
+![]()
 
 ### 개발 기간
 ---
