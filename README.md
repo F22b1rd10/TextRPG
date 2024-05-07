@@ -1,7 +1,7 @@
 # TextRPG
 ---
 스파르타 코딩 클럽에서 제공된 기본 코드를 C# 언어를 이용해 만든 c-6조 슉의 팀 프로젝트, TextRPG입니다.
-
+![trpg](https://github.com/F22b1rd10/TextRPG/blob/main/trpg.jpeg)
 
 ## 게임 개요
 ---
