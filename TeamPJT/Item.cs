@@ -100,7 +100,7 @@ namespace TeamPJT
                 Console.Write("{0} ", idx);
                 Console.ResetColor();
             }
-            else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 12));
+            Console.Write(ConsoleUtility.PadRightForMixedText(Name, 12));
 
             Console.Write(" | ");
 
