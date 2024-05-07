@@ -47,6 +47,8 @@ namespace TeamPJT
         internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
         {
             Console.Write("- ");
+
+
             if (withNumber)
             {
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -66,9 +68,19 @@ namespace TeamPJT
 
             Console.Write(" | ");
 
-            if (Atk != 0) Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
-            if (Def != 0) Console.Write($"방어력 {(Atk >= 0 ? "+" : "")}{Def} ");
-            if (Hp != 0) Console.Write($"체  력 {(Atk >= 0 ? "+" : "")}{Hp} ");
+            if (Atk != 0)
+            {
+                Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
+            }
+            if (Def != 0)
+            {
+                Console.Write($"방어력 {(Atk >= 0 ? "+" : "")}{Def} ");
+            }
+
+            if (Hp != 0)
+            {
+                Console.Write($"체  력 {(Atk >= 0 ? "+" : "")}{Hp} ");
+            }
 
             Console.Write(" | ");
 
@@ -79,6 +91,7 @@ namespace TeamPJT
 
         public void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
         {
+
             Console.Write("- ");
             // 장착관리 전용
             if (withNumber)
@@ -114,11 +127,27 @@ namespace TeamPJT
         internal void ToggleEquipStatus()
         {
             IsEquipped = !IsEquipped;
+
         }
 
         internal void Purchase()
         {
             IsPurchased = true;
+        }
+
+        //아이템 스텟 적
+        public void ItemStatApply(Player player)
+        {
+            if (IsEquipped)
+            {
+                player.Atk += Atk;
+                player.Def += Def;
+            }
+            else if (!IsEquipped)
+            {
+                player.Atk -= Atk;
+                player.Def -= Def;
+            }
         }
     }
 }

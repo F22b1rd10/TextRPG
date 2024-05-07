@@ -85,5 +85,37 @@ namespace TeamPJT
             int padding = totalLength - currentLength;
             return str.PadRight(str.Length + padding);
         }
+
+        public static int AttackedMonsterChoice(int min, int max)
+        {
+            while (true)
+            {
+                Console.Write("공격할 몬스터를 선택해주세요. ");
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= min && choice <= max)
+                {
+                    return choice;
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다. 다시 시도해주세요.");
+                }
+            }
+        }
+
+        public static int SkillSelect(int min, int max)
+        {
+            while (true)
+            {
+                Console.Write("어떤 스킬을 사용하시겠습니니까?");
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= min && choice <= max)
+                {
+                    return choice;
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다. 다시 시도해주세요.");
+                }
+            }
+        }
     }
 }
